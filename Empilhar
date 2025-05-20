@@ -1,0 +1,7 @@
+O programa simula o funcionamento de uma pilha de inteiros com tamanho máximo de 20 posições. A estrutura é controlada por um vetor e uma variável chamada topo, que indica a posição do último elemento inserido. Inicialmente, topo é -1, indicando que a pilha está vazia.
+
+O programa possui funções para verificar se a pilha está cheia (pilhaCheia) ou vazia (pilhaVazia), além de operações para empilhar (inserir) e desempilhar (remover) elementos. Se a pilha estiver cheia, não é possível adicionar novos elementos, e se estiver vazia, não é possível remover.
+
+Uma função recursiva chamada exibirPilhaRecursiva é usada para mostrar os elementos da pilha do topo até a base, imprimindo um por um.
+
+Na função principal (inicio()), diversos valores pares são empilhados. Em seguida, o conteúdo da pilha é exibido. Depois, um elemento é removido (o do topo) e a pilha é exibida novamente já com esse elemento a menos.

@@ -1,0 +1,162 @@
+/* Reset geral */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Corpo da página com imagem de fundo */
+body {
+  font-family: 'Roboto', sans-serif;
+  background: url('https://ogimg.infoglobo.com.br/in/24400247-15d-1b2/FT1086A/header-atletico-mg.jpg') no-repeat center center fixed;
+  background-size: cover;
+  color: white;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+/* Blocos com fundo escuro e transparência */
+header, .hero, footer {
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(2px);
+  padding: 20px;
+  margin: 10px auto;
+  border-radius: 10px;
+  max-width: 900px;
+}
+
+/* Estilização de texto */
+header h1, .hero h1 {
+  color: #ffffff;
+}
+
+.hero p {
+  color: #dddddd;
+}
+
+/* Navegação */
+header nav a {
+  color: gold;
+  margin: 0 10px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+header nav a:hover {
+  text-decoration: underline;
+}
+
+/* Seção de destaque */
+.hero {
+  text-align: center;
+  margin-top: 30px;
+  border: 2px solid gold;
+}
+
+/* Formulário principal */
+section.content {
+  background-color: rgba(255, 255, 255, 0.5); /* branco translúcido */
+  padding: 30px;
+  margin: 30px auto;
+  border-radius: 10px;
+  border: 1px solid #aa0a0a;
+  max-width: 700px;
+  color: #000;
+}
+
+/* Labels e campos do formulário */
+form label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+form input,
+form select,
+form textarea {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #740606;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+input[type="file"] {
+  padding: 5px;
+}
+
+/* Botões */
+button {
+  background-color: #000;
+  color: gold;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 5px;
+}
+
+button:hover {
+  background-color: #333;
+}
+
+/* Abas (etapas do formulário) */
+.tab {
+  display: none;
+}
+
+.tab.active {
+  display: block;
+}
+
+/* Botões de navegação entre abas */
+.navigation-buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Rodapé */
+footer {
+  text-align: center;
+  padding: 20px;
+  color: gold;
+  margin-top: 40px;
+  border-top: 1px solid #333;
+  font-size: 0.9rem;
+}
+
+/* Responsividade */
+@media (max-width: 600px) {
+  form input,
+  form select {
+    font-size: 0.9rem;
+  }
+
+  button {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .navigation-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  header h1 {
+    font-size: 2rem;
+  }
+
+  .hero h1 {
+    font-size: 1.5rem;
+  }
+
+  .hero p {
+    font-size: 1rem;
+  }
+}

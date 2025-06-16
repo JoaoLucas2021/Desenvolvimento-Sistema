@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Peneira Clube Atlético Mineiro</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+        /* Reset geral */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Corpo da página com imagem de fundo */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: url('https://ogimg.infoglobo.com.br/in/24400247-15d-1b2/FT1086A/header-atletico-mg.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: rgb(255, 255, 255);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            /* Centraliza o conteúdo inicial verticalmente */
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        /* Estilo para a tela inicial (capa) */
+        .initial-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 40px); /* Ajusta para a altura da viewport menos o padding do body */
+            width: 100%;
+            max-width: 900px;
+            margin: auto;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(2px);
+            border-radius: 10px;
+            border: 2px solid rgb(255, 255, 255); /* Adicionado para destaque da capa */
+        }
+
+        .initial-screen h1 {
+            color: #ffffff;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        /* Blocos com fundo escuro e transparência */
+        header, footer, .tab-container {
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(2px);
+            padding: 20px;
+            margin: 10px auto;
+            border-radius: 10px;
+            max-width: 900px;
+            width: 100%; /* Ensure they take full width up to max-width */
+        }
+
+        /* Estilização de texto */
+        header h1 {
+            color: #ffd900;
+        }
+
+        /* Navegação */
+        header nav a {
+            color: rgb(255, 255, 255);
+            margin: 0 10px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        header nav a:hover {
+            text-decoration: underline;
+        }
+
+        /* --- Estilos para as novas abas (Sobre/Inscrição/Aviso) --- */
+        .tab-buttons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid rgb(252, 247, 0);
+            flex-wrap: wrap; /* Permite que os botões quebrem linha em telas menores */
+        }
+
+        .tab-button {
+            background-color: #333;
+            color: rgb(255, 255, 255);
+            border: none;
+            padding: 10px 20px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            border-radius: 8px 8px 0 0;
+            margin: 0 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .tab-button.active {
+            background-color: rgb(255, 255, 253);
+            color: #000;
+            font-weight: bold;
+            border-bottom: 2px solid #000;
+        }
+
+        .tab-button:hover:not(.active) {
+            background-color: #555;
+        }
+
+        .main-tab-content {
+            display: none; /* Oculta todas as abas de conteúdo principal por padrão */
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 0 0 10px 10px;
+            color: rgb(255, 255, 255); /* Garante que o texto dentro das abas seja branco */
+            text-align: left; /* Alinha o texto dentro das abas à esquerda */
+        }
+
+        .main-tab-content.active {
+            display: block; /* Mostra apenas a aba ativa */
+        }
+        /* --- Fim dos estilos para as novas abas --- */
+
+        /* Seção de destaque (agora conteúdo de uma aba) */
+        .hero {
+            text-align: center;
+            margin-top: 0; /* Ajustado para não ter margem extra dentro da aba */
+            border: none; /* Ajustado para não ter borda dupla com a aba */
+            background-color: transparent; /* Transparente dentro da aba */
+            backdrop-filter: none; /* Sem blur extra dentro da aba */
+        }
+        .hero h1 { font-size: 2rem; color: #ffd000; }
+        .hero p { font-size: 1.1rem; color: #f7df08; }
+
+
+        /* Formulário principal (agora conteúdo de uma aba) */
+        section.content {
+            background-color: rgba(255, 255, 255, 0.7); /* Mais visível */
+            padding: 30px;
+            margin: 0; /* Ajustado para não ter margem extra dentro da aba */
+            border-radius: 10px;
+            border: 1px solid #aa0a0a;
+            max-width: 100%; /* Ajustado para caber dentro da aba */
+            color: #000; /* Texto do formulário preto */
+            text-align: left; /* Ensure form content is left-aligned */
+        }
+
+        /* Estilo para a aba de Aviso */
+        #noticeTab ul {
+            list-style-type: disc; /* Bolinhas para a lista */
+            margin-left: 20px;
+            padding-left: 0;
+        }
+
+        #noticeTab ul li {
+            margin-bottom: 10px;
+        }
+
+        /* Labels e campos do formulário */
+        form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        form input,
+        form select,
+        form textarea {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #740606;
+            border-radius: 5px;
+            font-size: 1rem;
+            color: #333; /* Ensure input text is readable */
+        }
+
+        input[type="file"] {
+            padding: 5px;
+        }
+
+        /* Adiciona um estilo para campos inválidos */
+        input:invalid {
+            border: 2px solid red;
+        }
+
+        /* Estilo para a mensagem de sucesso */
+        #successMessage {
+            background-color: rgba(0, 128, 0, 0.8);
+            color: rgb(211, 214, 9);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: center;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            width: 80%;
+            max-width: 400px;
+        }
+
+        /* Botões */
+        button {
+            background-color: #000;
+            color: rgb(255, 255, 255);
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        button:hover {
+            background-color: #333;
+        }
+
+        /* Classe para ocultar elementos */
+        .hidden {
+            display: none !important; /* Usar !important para garantir a sobreposição */
+        }
+
+        /* Abas (etapas do formulário de várias etapas) */
+        .tab {
+            display: none;
+        }
+
+        .tab.active {
+            display: block;
+        }
+
+        /* Botões de navegação entre abas do formulário */
+        .navigation-buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Rodapé */
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: rgb(255, 255, 255);
+            margin-top: 40px;
+            border-top: 1px solid #333;
+            font-size: 0.9rem;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .tab-buttons {
+                flex-direction: column; /* Botões de aba em coluna */
+                align-items: center;
+            }
+            .tab-button {
+                width: 90%; /* Ocupa quase a largura total */
+                margin-bottom: 5px; /* Espaçamento entre os botões */
+                border-radius: 8px; /* Arredonda todos os cantos em telas pequenas */
+            }
+            .tab-button.active {
+                border-bottom: none; /* Remove a borda inferior para botões em coluna */
+            }
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .initial-screen {
+                min-height: calc(100vh - 20px);
+                padding: 15px;
+            }
+            .initial-screen h1 {
+                font-size: 1.8rem;
+            }
+
+            .tab-button {
+                font-size: 1rem;
+                padding: 8px 15px;
+            }
+
+            form input,
+            form select {
+                font-size: 0.9rem;
+            }
+
+            button {
+                width: 100%;
+                margin-top: 10px;
+            }
+
+            .navigation-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            header h1 {
+                font-size: 2rem;
+            }
+
+            .hero h1 {
+                font-size: 1.5rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="initial-screen" id="initialScreen">
+    <h1>Peneira Clube Atletico Mineiro</h1>
+    <p>Oportunidade única para mostrar seu talento e alcançar o futebol profissional!</p>
+    <button id="startRegistrationButton">Fazer Cadastro</button>
+</div>
+
+<header class="hidden" id="mainHeader">
+    <h1>Peneira Clube Atlético Mineiro</h1>
+    <nav>
+    </nav>
+</header>
+
+<div class="tab-container hidden" id="mainContentTabs">
+    <div class="tab-buttons">
+        <button class="tab-button active" data-tab-target="aboutTab">Sobre</button>
+        <button class="tab-button" data-tab-target="noticeTab">Aviso</button>
+        <button class="tab-button" data-tab-target="registrationTab">Inscrição</button>
+        <button class="tab-button" data-tab-target="contactTab">Contato</button>
+    </div>
+
+    <div class="main-tab-content active" id="aboutTab">
+        <section class="hero" id="sobre">
+            <h1>Mostre seu talento nos campos!</h1>
+            <p>Venha participar da nossa peneira e tenha a chance de entrar para um clube profissional.</p>
+            <p>Nossa equipe de olheiros estará presente para identificar os futuros craques. Não perca esta oportunidade de ouro!</p>
+            <p>A Peneira Clube Atlético Mineiro é a sua porta de entrada para o mundo do futebol profissional. Oferecemos uma estrutura completa para que você possa demonstrar suas habilidades e ser notado por grandes clubes. Nossos avaliadores são profissionais experientes, buscando o próximo talento que fará a diferença nos gramados.</p>
+            <p>Junte-se a nós e transforme seu sonho em realidade!</p>
+        </section>
+    </div>
+
+    <div class="main-tab-content" id="noticeTab">
+        <section class="notice-section">
+            <h2>Aviso Importante: Documentos Obrigatórios</h2>
+            <p>Para a sua inscrição ser válida e completa, é *obrigatório* apresentar os seguintes documentos no dia da peneira:</p>
+            <ul>
+                <li>*Documento de Identidade:* RG ou Certidão de Nascimento do atleta.</li>
+                <li>**Local: Rodovia MG 424 s/n - Jardim da Glória, Vespasiano - MG, 33200-000 CIDADE DO GALO.</li>
+                <li>*CPF:* (do atleta).</li>
+                <li>*Comprovante de Residência:* Conta de água, luz ou telefone recente.</li>
+                <li>*Autorização dos Pais ou Responsável Legal:* Formulário assinado pelos pais ou responsável, com firma reconhecida em cartório, caso o atleta seja menor de idade. (Será disponibilizado um modelo no local)</li>
+                <li>*1 Foto 3x4 recente:* Uma foto atualizada do atleta.</li>
+                <li>*Comprovante de Inscrição:* (Caso a inscrição tenha sido feita online, traga a confirmação gerada em PDF).</li>
+            </ul>
+            <p>A falta de qualquer um desses documentos poderá impossibilitar a participação do atleta na peneira. Contamos com a sua colaboração!</p>
+        </section>
+    </div>
+
+    <div class="main-tab-content" id="registrationTab">
+        <section class="content" id="inscricao">
+            <h2>Formulário de Inscrição</h2>
+            <form id="formInscricao">
+
+                <div class="tab active">
+                    <h2>Etapa 1 - Dados do Atleta</h2>
+                    <label>Nome completo: <input type="text" id="atletaNome" required></label>
+                    <label>Email: <input type="email" id="atletaEmail" required></label>
+                    <label>CPF: <input type="text" id="atletaCPF" pattern="\d{11}" title="O CPF deve conter exatamente 11 dígitos numéricos." required></label>
+                    <label>Data de nascimento: <input type="date" id="atletaDataNascimento" required></label>
+                    <label>Cidade/estado: <input type="text" id="atletaCidadeEstado" required></label>
+                    <label>Idade: <input type="number" id="atletaIdade" min="7" max="17" required></label>
+                    <label>Endereço completo: <input type="text" id="atletaEndereco" required></label>
+                    <label>Telefone: <input type="text" id="atletaTelefone" required></label>
+                    <div class="navigation-buttons">
+                        <button type="button" class="next-btn">Próximo</button>
+                    </div>
+                </div>
+
+                <div class="tab">
+                    <h2>Etapa 2 - Dados do Responsável</h2>
+                    <label>Nome completo: <input type="text" id="responsavelNome" required></label>
+                    <label>Email: <input type="email" id="responsavelEmail" required></label>
+                    <label>CPF: <input type="text" id="responsavelCPF" pattern="\d{11}" title="O CPF deve conter exatamente 11 dígitos numéricos." required></label>
+                    <label>Data de nascimento: <input type="date" id="responsavelDataNascimento" required></label>
+                    <label>Cidade/estado: <input type="text" id="responsavelCidadeEstado" required></label>
+                    <label>Idade: <input type="number" id="responsavelIdade" required></label>
+                    <label>Endereço completo: <input type="text" id="responsavelEndereco" required></label>
+                    <label>Telefone: <input type="text" id="responsavelTelefone" required></label>
+                    <div class="navigation-buttons">
+                        <button type="button" class="prev-btn">Voltar</button>
+                        <button type="button" class="next-btn">Próximo</button>
+                    </div>
+                </div>
+
+                <div class="tab">
+                    <h2>Etapa 3 - Saúde e Aptidão</h2>
+                    <label>Lesão grave? Qual?: <input type="text" id="lesaoGrave" required></label>
+                    <label>Tipo sanguíneo: <input type="text" id="tipoSanguineo" required></label>
+                    <label>Alergias/restrições?: <input type="text" id="alergiasRestricoes" required></label>
+                    <label>Contato de emergência: <input type="text" id="contatoEmergencia" required></label>
+                    <label>Altura (cm): <input type="number" id="altura" min="100" max="250"></label>
+                    <label>Peso (kg): <input type="number" id="peso" min="30" max="200"></label>
+                    <label>
+                        <input type="checkbox" id="aceiteTermos" required>
+                        Aceito os <a href="Calculadora.html" target="_blank">termos de divulgação</a>
+                    </label>
+                    <div class="navigation-buttons">
+                        <button type="button" class="prev-btn">Voltar</button>
+                        <button type="button" class="next-btn">Próximo</button>
+                    </div>
+                </div>
+
+                <div class="tab">
+                    <h2>Etapa 4 - Informações Técnicas</h2>
+                    <label>Foto do atleta: <input type="file" id="fotoAtleta" accept="image/*" required></label>
+                    <label>Bairro: <input type="text" id="bairro" required></label>
+                    <label>Modalidade:
+                        <select id="modalidade" required>
+                            <option value="">Selecione</option>
+                            <option value="Futsal">Futsal</option>
+                            <option value="Campo">Campo</option>
+                        </select>
+                    </label>
+                    <label>Posição:
+                        <select id="posicao" required>
+                            <option value="">Selecione</option>
+                            <option value="Goleiro">Goleiro</option>
+                            <option value="Zagueiro">Zagueiro</option>
+                            <option value="Lateral">Lateral</option>
+                            <option value="Meia">Meia</option>
+                            <option value="Atacante">Atacante</option>
+                        </select>
+                    </label>
+                    <label>Joga em mais de uma posição? Qual?: <input type="text" id="posicoesAdicionais"></label>
+                    <label>Anos de experiência: <input type="number" id="anosExperiencia" min="0" required></label>
+                    <label>Pé dominante:
+                        <select id="peDominante" required>
+                            <option value="">Selecione</option>
+                            <option value="direito">Direito</option>
+                            <option value="esquerdo">Esquerdo</option>
+                            <option value="ambos">Ambos</option>
+                        </select>
+                    </label>
+                    <div class="navigation-buttons">
+                        <button type="button" class="prev-btn">Voltar</button>
+                        <button type="button" id="generatePdfButton">Gerar PDF</button>
+                        <button type="submit">Enviar Inscrição</button>
+                    </div>
+                </div>
+
+            </form>
+        </section>
+    </div>
+
+    <div class="main-tab-content" id="contactTab">
+        <section class="contact-section">
+            <h2>Fale Conosco</h2>
+            <p>Se tiver dúvidas ou precisar de mais informações sobre a peneira, entre em contato através dos canais abaixo:</p>
+            <p><strong>Email:</strong> peneiraatleticomineiro@gmail.com</p>
+            <p><strong>WhatsApp:</strong> (11) 99999-9999</p>
+            <p><strong>Endereço do Evento:</strong> Rodovia MG 424 s/n - Jardim da Glória, Vespasiano - MG, 33200-000 CIDADE DO GALO</p>
+            <p>Nossa equipe está pronta para te atender!</p>
+        </section>
+    </div>
+
+</div>
+
+<footer class="hidden" id="mainFooter">
+    <p>Contato: peneiraatleticomineiro@gmail.com | WhatsApp: (11) 99999-9999</p>
+    <p>&copy; 2025 Peneira Clube Atlético Mineiro</p>
+</footer>
+
+<div id="successMessage" class="hidden">
+    Sua inscrição foi enviada com sucesso!
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const initialScreen = document.getElementById("initialScreen");
+        const startRegistrationButton = document.getElementById("startRegistrationButton");
+        const mainHeader = document.getElementById("mainHeader");
+        const mainContentTabs = document.getElementById("mainContentTabs");
+        const mainFooter = document.getElementById("mainFooter");
+
+        const tabButtons = document.querySelectorAll(".tab-button");
+        const mainTabContents = document.querySelectorAll(".main-tab-content");
+
+        let currentFormTab = 0; // Para as etapas do formulário interno
+        const formTabs = document.querySelectorAll("#formInscricao .tab"); // Etapas do formulário
+        const nextFormButtons = document.querySelectorAll(".next-btn");
+        const prevFormButtons = document.querySelectorAll(".prev-btn");
+        const generatePdfButton = document.getElementById("generatePdfButton");
+        const formInscricao = document.getElementById("formInscricao");
+        const successMessage = document.getElementById("successMessage");
+
+
+        // Função para mostrar o conteúdo principal e esconder a tela inicial
+        function showMainContent() {
+            initialScreen.classList.add("hidden");
+            mainHeader.classList.remove("hidden");
+            mainContentTabs.classList.remove("hidden");
+            mainFooter.classList.remove("hidden");
+            document.body.classList.add("content-visible"); // Adiciona classe para ajustar o body se necessário
+
+            // Rola até o topo da página para ver o header e as abas
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Garante que a aba "Sobre" seja a primeira a ser exibida ao entrar no conteúdo principal
+            showMainTab('aboutTab');
+            showFormTab(0); // Garante que a primeira aba do formulário esteja ativa ao mostrar o form
+        }
+
+        // Função para alternar entre as abas principais (Sobre/Aviso/Inscrição/Contato)
+        function showMainTab(tabId) {
+            mainTabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+            tabButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            document.getElementById(tabId).classList.add('active');
+            document.querySelector(`.tab-button[data-tab-target="${tabId}"]`).classList.add('active');
+
+            // Se a aba de inscrição for ativada, garante que a primeira etapa do formulário esteja visível
+            if (tabId === 'registrationTab') {
+                showFormTab(0);
+            }
+        }
+
+        // Função para mostrar uma aba específica do formulário (internas)
+        function showFormTab(index) {
+            formTabs.forEach((tab, i) => {
+                tab.classList.toggle("active", i === index);
+            });
+            currentFormTab = index;
+        }
+
+        // --- Funções de Validação ---
+
+        function validateName(input) {
+            const name = input.value.trim();
+            // Allow names with spaces, but ensure first letter is capitalized and not empty
+            if (name === "" || name.split(' ').some(word => word.length > 0 && word[0] !== word[0].toUpperCase())) {
+                input.style.border = "2px solid red";
+                return false;
+            }
+            input.style.border = "1px solid #740606";
+            return true;
+        }
+
+        function validateDateOfBirth(input) {
+            const date = input.value.trim();
+            // Basic check for YYYY-MM-DD format
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+                input.style.border = "2px solid red";
+                return false;
+            }
+            // Optional: Add logic to check if date is valid (e.g., not a future date)
+            input.style.border = "1px solid #740606";
+            return true;
+        }
+
+        function validateEmail(input) {
+            const email = input.value.trim();
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (email === "" || !emailRegex.test(email) || !email.includes(".com")) {
+                input.style.border = "2px solid red";
+                return false;
+            }
+            input.style.border = "1px solid #740606";
+            return true;
+        }
+
+        function validateAthleteAge(input) {
+            const age = parseInt(input.value);
+            if (isNaN(age) || age < 7 || age > 17) {
+                input.style.border = "2px solid red";
+                return false;
+            }
+            input.style.border = "1px solid #740606";
+            return true;
+        }
+
+        function validateCPF(input) {
+            const cpf = input.value.trim();
+            if (!/^\d{11}$/.test(cpf)) {
+                input.style.border = "2px solid red";
+                return false;
+            }
+            input.style.border = "1px solid #740606";
+            return true;
+        }
+
+        // Function to validate fields and go to the next form tab
+        function validateAndNextFormTab() {
+            const currentTabInputs = formTabs[currentFormTab].querySelectorAll("input[required], select[required], textarea[required]");
+            let valid = true;
+
+            currentTabInputs.forEach(input => {
+                let fieldIsValid = true;
+                const inputId = input.id; // Get the ID of the input
+
+                // Specific validations
+                if (inputId === 'atletaNome' || inputId === 'responsavelNome') {
+                    fieldIsValid = validateName(input);
+                } else if (inputId === 'atletaDataNascimento' || inputId === 'responsavelDataNascimento') {
+                    fieldIsValid = validateDateOfBirth(input);
+                } else if (inputId === 'atletaEmail' || inputId === 'responsavelEmail') {
+                    fieldIsValid = validateEmail(input);
+                } else if (inputId === 'atletaIdade') {
+                    fieldIsValid = validateAthleteAge(input);
+                } else if (inputId === 'atletaCPF' || inputId === 'responsavelCPF') {
+                    fieldIsValid = validateCPF(input);
+                } else {
+                    // General validation for required fields
+                    if (!input.value.trim() || (input.type === "checkbox" && !input.checked) || (input.tagName === 'SELECT' && input.value === '')) {
+                        input.style.border = "2px solid red";
+                        fieldIsValid = false;
+                    } else {
+                        input.style.border = "1px solid #740606";
+                    }
+                }
+
+                if (!fieldIsValid) {
+                    valid = false;
+                }
+            });
+
+            if (valid) {
+                nextFormTab();
+            } else {
+                alert("Por favor, preencha todos os campos corretamente antes de continuar.");
+            }
+        }
+
+        // Function to go to the next form tab
+        function nextFormTab() {
+            if (currentFormTab < formTabs.length - 1) {
+                showFormTab(currentFormTab + 1);
+            }
+        }
+
+        // Function to go to the previous form tab
+        function prevFormTab() {
+            if (currentFormTab > 0) {
+                showFormTab(currentFormTab - 1);
+            }
+        }
+
+        // --- Function to Generate PDF ---
+        function generatePdf() {
+            // Optional: You might want to run a full validation before generating PDF
+            // if (!validateAllFormFields()) { // You'd need to implement this
+            //     alert("Por favor, preencha todos os campos obrigatórios antes de gerar o PDF.");
+            //     return;
+            // }
+
+            // Create a temporary container for PDF content
+            const tempPdfContainer = document.createElement('div');
+            tempPdfContainer.style.position = 'absolute';
+            tempPdfContainer.style.left = '-9999px'; // Move off-screen
+            tempPdfContainer.style.width = '794px'; // A4 width (approx. 210mm at 96dpi)
+            tempPdfContainer.style.padding = '30px';
+            tempPdfContainer.style.backgroundColor = 'white';
+            tempPdfContainer.style.color = 'black';
+            tempPdfContainer.style.boxSizing = 'border-box';
+            tempPdfContainer.style.fontFamily = 'Arial, sans-serif'; // Standard font for PDF
+
+            // Add a title to the PDF
+            const pdfTitle = document.createElement('h1');
+            pdfTitle.textContent = 'Dados da Inscrição - Peneira Clube Atlético Mineiro';
+            pdfTitle.style.textAlign = 'center';
+            pdfTitle.style.marginBottom = '30px';
+            pdfTitle.style.color = '#333';
+            tempPdfContainer.appendChild(pdfTitle);
+
+            // Collect data from ALL form fields, regardless of current tab visibility
+            // Ensure you've added IDs to all relevant inputs in your HTML for easier selection
+            const fieldsToCollect = [
+                { id: 'atletaNome', label: 'Nome completo do Atleta' },
+                { id: 'atletaEmail', label: 'Email do Atleta' },
+                { id: 'atletaCPF', label: 'CPF do Atleta' },
+                { id: 'atletaDataNascimento', label: 'Data de Nascimento do Atleta' },
+                { id: 'atletaCidadeEstado', label: 'Cidade/Estado do Atleta' },
+                { id: 'atletaIdade', label: 'Idade do Atleta' },
+                { id: 'atletaEndereco', label: 'Endereço do Atleta' },
+                { id: 'atletaTelefone', label: 'Telefone do Atleta' },
+
+                { id: 'responsavelNome', label: 'Nome completo do Responsável' },
+                { id: 'responsavelEmail', label: 'Email do Responsável' },
+                { id: 'responsavelCPF', label: 'CPF do Responsável' },
+                { id: 'responsavelDataNascimento', label: 'Data de Nascimento do Responsável' },
+                { id: 'responsavelCidadeEstado', label: 'Cidade/Estado do Responsável' },
+                { id: 'responsavelIdade', label: 'Idade do Responsável' },
+                { id: 'responsavelEndereco', label: 'Endereço do Responsável' },
+                { id: 'responsavelTelefone', label: 'Telefone do Responsável' },
+
+                { id: 'lesaoGrave', label: 'Lesão grave? Qual?' },
+                { id: 'tipoSanguineo', label: 'Tipo Sanguíneo' },
+                { id: 'alergiasRestricoes', label: 'Alergias/Restrições?' },
+                { id: 'contatoEmergencia', label: 'Contato de Emergência' },
+                { id: 'altura', label: 'Altura (cm)' },
+                { id: 'peso', label: 'Peso (kg)' },
+                { id: 'aceiteTermos', label: 'Aceite os termos de divulgação', type: 'checkbox' },
+
+                { id: 'fotoAtleta', label: 'Foto do Atleta', type: 'file' },
+                { id: 'bairro', label: 'Bairro' },
+                { id: 'modalidade', label: 'Modalidade' },
+                { id: 'posicao', label: 'Posição' },
+                { id: 'posicoesAdicionais', label: 'Joga em mais de uma posição? Qual?' },
+                { id: 'anosExperiencia', label: 'Anos de Experiência' },
+                { id: 'peDominante', label: 'Pé Dominante' },
+            ];
+
+            // Add form data to the temporary container
+            fieldsToCollect.forEach(field => {
+                const inputElement = document.getElementById(field.id);
+                if (inputElement) {
+                    const p = document.createElement('p');
+                    let value = '';
+
+                    if (field.type === 'checkbox') {
+                        value = inputElement.checked ? 'Sim' : 'Não';
+                    } else if (field.type === 'file') {
+                        value = inputElement.files.length > 0 ? inputElement.files[0].name : 'Nenhuma foto anexada';
+                    } else if (inputElement.tagName === 'SELECT') {
+                        value = inputElement.options[inputElement.selectedIndex].text;
+                    } else {
+                        value = inputElement.value;
+                    }
+
+                    p.innerHTML = `<strong>${field.label}:</strong> ${value || 'Não preenchido'}`;
+                    p.style.marginBottom = '10px';
+                    p.style.fontSize = '1.1rem';
+                    tempPdfContainer.appendChild(p);
+                }
+            });
+
+            document.body.appendChild(tempPdfContainer);
+
+            // Generate PDF
+            html2pdf(tempPdfContainer, {
+                margin: 10,
+                filename: 'Inscricao_Peneira_Atletico_Mineiro.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, logging: true, useCORS: true },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            }).then(() => {
+                // Clean up
+                tempPdfContainer.remove();
+            }).catch(error => {
+                console.error("Erro ao gerar PDF:", error);
+                alert("Ocorreu um erro ao gerar o PDF. Tente novamente.");
+                // Ensure elements are removed even if PDF generation fails
+                tempPdfContainer.remove();
+            });
+        }
+
+        // Evento de clique para o botão "Fazer Cadastro" na tela inicial
+        if (startRegistrationButton) {
+            startRegistrationButton.addEventListener("click", showMainContent);
+        }
+
+        // Eventos para os botões das abas principais (Sobre/Aviso/Inscrição/Contato)
+        tabButtons.forEach(button => {
+            button.addEventListener("click", function() {
+                const tabId = this.dataset.tabTarget;
+                showMainTab(tabId);
+            });
+        });
+
+        // Atribuir eventos de clique para os botões de navegação do formulário
+        nextFormButtons.forEach(button => {
+            button.addEventListener("click", validateAndNextFormTab);
+        });
+
+        prevFormButtons.forEach(button => {
+            button.addEventListener("click", prevFormTab);
+        });
+
+        // Atribuir evento de clique para o botão "Gerar PDF"
+        if (generatePdfButton) {
+            generatePdfButton.addEventListener("click", generatePdf);
+        }
+
+        // Manipulador de submissão do formulário final
+        formInscricao.addEventListener("submit", function (e) {
+            e.preventDefault(); // Impede o envio padrão do formulário
+
+            // Validate all fields on the last tab before final submission
+            const currentTabInputs = formTabs[currentFormTab].querySelectorAll("input[required], select[required], textarea[required]");
+            let allValid = true;
+
+            currentTabInputs.forEach(input => {
+                let fieldIsValid = true;
+                const inputId = input.id;
+
+                if (input.hasAttribute("required") && (!input.value.trim() || (input.type === "checkbox" && !input.checked) || (input.tagName === 'SELECT' && input.value === ''))) {
+                    input.style.border = "2px solid red";
+                    fieldIsValid = false;
+                } else {
+                    input.style.border = "1px solid #740606";
+                }
+
+                // Re-run specific validations for final submission
+                if (inputId === 'atletaNome' || inputId === 'responsavelNome') {
+                    fieldIsValid = validateName(input);
+                } else if (inputId === 'atletaDataNascimento' || inputId === 'responsavelDataNascimento') {
+                    fieldIsValid = validateDateOfBirth(input);
+                } else if (inputId === 'atletaEmail' || inputId === 'responsavelEmail') {
+                    fieldIsValid = validateEmail(input);
+                } else if (inputId === 'atletaIdade') {
+                    fieldIsValid = validateAthleteAge(input);
+                } else if (inputId === 'atletaCPF' || inputId === 'responsavelCPF') {
+                    fieldIsValid = validateCPF(input);
+                }
+
+                if (!fieldIsValid) {
+                    allValid = false;
+                }
+            });
+
+
+            if (allValid) {
+                // Here you would typically send the form data to a server
+                console.log("Formulário submetido com sucesso!");
+                // For demonstration, show success message and reset form
+                successMessage.classList.remove("hidden");
+                formInscricao.reset(); // Clear form fields
+                showFormTab(0); // Go back to the first step of the form
+                setTimeout(() => {
+                    successMessage.classList.add("hidden");
+                }, 3000); // Hide success message after 3 seconds
+            } else {
+                alert("Por favor, preencha todos os campos corretamente antes de enviar a inscrição.");
+                // Ensure the invalid tab is shown if submission fails
+                const firstInvalidInput = formInscricao.querySelector('input:invalid, select:invalid, textarea:invalid');
+                if (firstInvalidInput) {
+                    let parentTab = firstInvalidInput.closest('.tab');
+                    if (parentTab) {
+                        let tabIndex = Array.from(formTabs).indexOf(parentTab);
+                        showFormTab(tabIndex);
+                    }
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>

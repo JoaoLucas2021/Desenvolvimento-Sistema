@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forca Junina!</title>
+    <link rel="stylesheet" href="style.css"> 
+</head>
+<body>
+    <div class="game-container">
+        <header>
+            <h1>Forca Junina!</h1>
+            <p>Descubra as palavras típicas dessa festa arraiá!</p>
+        </header>
+
+        <div class="category-selector">
+            <button class="category-btn active" data-category="festaJunina">Festa Junina</button>
+            <button class="category-btn" data-category="SENAI">SENAI</button>
+        </div>
+
+        <div class="game-board">
+            <div class="hangman-container">
+                <div class="canvas-container">
+                    <div class="hangman-title">Cenário Junino</div>
+                    <canvas id="hangmanCanvas"></canvas>
+                </div>
+            </div>
+
+            <div class="word-display">
+                <div class="word-letters" id="wordLetters"></div>
+                <div class="status">
+                    Chances restantes: <span class="attempts" id="attemptsLeft">6</span>
+                </div>
+                <div class="keyboard" id="keyboard"></div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn-new-game" id="newGameBtn">Novo Jogo</button>
+        </div>
+    </div>
+
+    <div class="message-overlay" id="messageOverlay">
+        <div class="message-box">
+            <h2 class="message-title" id="messageTitle">Parabéns!</h2>
+            <p class="message-text" id="messageText">Você acertou a palavra!</p>
+            <div>
+                <p>A palavra era:</p>
+                <div class="word-reveal" id="wordReveal"></div>
+            </div>
+            <button class="btn-new-game" id="playAgainBtn">Jogar Novamente</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

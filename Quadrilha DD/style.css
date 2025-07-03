@@ -1,0 +1,409 @@
+:root {
+    /* Cores da Festa Junina */
+    --primary-color: #e63946; /* Vermelho vibrante */
+    --secondary-color: #fca311; /* Laranja de milho */
+    --accent-color: #ffc300; /* Amarelo ensolarado */
+    --dark-color: #f19101; /* Verde escuro (folha de milho) */
+    --light-color: #f7f3e9; /* Creme/Palha */
+    --success-color: #4CAF50; /* Verde de sucesso */
+    --danger-color: #d00000; /* Vermelho de erro */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    /* Removido o gradiente anterior e o padrão SVG */
+    background-image: url('imagem1.jpg'); /* <<< COLOCAR O CAMINHO DA SUA IMAGEM AQUI! */
+    background-size: cover; /* Faz a imagem cobrir toda a área, sem distorcer */
+    background-repeat: no-repeat; /* Evita que a imagem se repita */
+    background-position: center center; /* Centraliza a imagem */
+    background-attachment: fixed; /* A imagem permanece fixa ao rolar a página */
+
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    color: var(--dark-color);
+}
+
+header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+h1 {
+    font-size: 3rem; /* Tamanho maior */
+    margin-bottom: 0.5rem;
+    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-transform: uppercase;
+    letter-spacing: 3px; /* Mais espaçamento */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); /* Sombra suave */
+}
+
+p {
+    font-size: 1.1rem;
+    color: var(--dark-color);
+}
+
+.game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    max-width: 1200px;
+    width: 100%;
+}
+
+.game-board {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 3rem;
+    width: 100%;
+}
+
+.hangman-container {
+    flex: 1;
+    min-width: 300px;
+    max-width: 400px;
+    position: relative;
+}
+
+.canvas-container {
+    background-color: white;
+    border-radius: 15px; /* Bordas mais arredondadas */
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15); /* Sombra mais intensa */
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    border: 3px solid var(--secondary-color); /* Borda temática */
+}
+
+canvas {
+    display: block;
+    width: 100%;
+    height: 300px;
+    margin: 0 auto;
+}
+
+.word-display {
+    flex: 1;
+    min-width: 300px;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+.word-letters {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.8rem; /* Mais espaçamento */
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background-color: rgba(255, 255, 255, 0.9); /* Fundo branco com pouca transparência */
+    border-radius: 10px;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.letter {
+    width: 50px; /* Letras maiores */
+    height: 60px; /* Letras maiores */
+    font-size: 2.2rem; /* Fonte maior */
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    border-bottom: 4px solid var(--primary-color); /* Borda mais grossa */
+    border-radius: 8px 8px 0 0;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    color: transparent; /* Esconde a letra até ser revelada */
+}
+
+.letter.revealed {
+    color: var(--primary-color);
+    transform: translateY(-5px);
+    background-color: var(--light-color); /* Fundo mais claro */
+}
+
+.status {
+    text-align: center;
+    padding: 1rem;
+    font-size: 1.3rem; /* Fonte maior */
+    font-weight: 500;
+    background-color: rgba(255, 255, 255, 0.9); /* Fundo branco com pouca transparência */
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
+}
+
+.attempts {
+    color: var(--danger-color); /* Cor de alerta */
+    font-weight: bold;
+}
+
+.keyboard {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.6rem; /* Mais espaçamento */
+    margin-top: 1rem;
+    padding: 1.5rem;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.key {
+    width: 48px; /* Teclas maiores */
+    height: 48px; /* Teclas maiores */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--light-color);
+    border: 2px solid var(--primary-color);
+    border-radius: 8px; /* Mais arredondado */
+    font-weight: bold;
+    font-size: 1.1rem; /* Fonte maior */
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+}
+
+.key:hover:not(:disabled) {
+    background-color: var(--primary-color);
+    color: white;
+    transform: translateY(-3px) scale(1.05); /* Efeito mais pronunciado */
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.key:active:not(:disabled) {
+    transform: translateY(0) scale(1);
+}
+
+.key:disabled {
+    opacity: 0.5; /* Menos opaco */
+    cursor: not-allowed;
+}
+
+.key.used {
+    background-color: #e0e0e0; /* Cinza mais claro */
+    border-color: #b0b0b0;
+    color: #777;
+}
+
+.key.correct {
+    background-color: rgba(76, 175, 80, 0.2); /* Verde mais suave */
+    border-color: var(--success-color);
+    color: var(--success-color);
+}
+
+.key.incorrect {
+    background-color: rgba(208, 0, 0, 0.2); /* Vermelho mais suave */
+    border-color: var(--danger-color);
+    color: var(--danger-color);
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem; /* Mais espaçamento */
+    margin-top: 2rem;
+}
+
+button {
+    padding: 1rem 2rem; /* Botões maiores */
+    border: none;
+    border-radius: 8px; /* Mais arredondado */
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1.5px; /* Mais espaçamento */
+    font-size: 1.1rem; /* Fonte maior */
+}
+
+.btn-new-game {
+    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    color: white;
+    box-shadow: 0 6px 15px rgba(230, 57, 70, 0.4);
+}
+
+.btn-new-game:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(230, 57, 70, 0.5);
+}
+
+.btn-new-game:active {
+    transform: translateY(0);
+}
+
+.message-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8); /* Fundo mais escuro */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s ease; /* Transição mais suave */
+}
+
+.message-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.message-box {
+    background-color: white;
+    padding: 3rem; /* Mais padding */
+    border-radius: 15px;
+    text-align: center;
+    max-width: 600px; /* Largura maior */
+    width: 90%;
+    transform: scale(0.8); /* Começa menor */
+    transition: all 0.4s ease;
+    position: relative;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    border: 4px solid var(--primary-color); /* Borda temática */
+}
+
+.message-overlay.show .message-box {
+    transform: scale(1);
+}
+
+.message-title {
+    font-size: 2.8rem; /* Título maior */
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.message-text {
+    font-size: 1.4rem; /* Texto maior */
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+    color: var(--dark-color);
+}
+
+.word-reveal {
+    font-weight: bold;
+    color: var(--secondary-color); /* Cor de destaque */
+    background-color: var(--light-color);
+    padding: 0.8rem 1.8rem; /* Mais padding */
+    border-radius: 8px;
+    display: inline-block;
+    margin: 1.5rem 0;
+    letter-spacing: 4px; /* Mais espaçamento */
+    font-size: 1.8rem; /* Maior */
+    text-transform: uppercase;
+}
+
+.hangman-title {
+    position: absolute;
+    top: -20px; /* Mais para cima */
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    color: white;
+    padding: 0.6rem 1.8rem; /* Mais padding */
+    border-radius: 25px; /* Mais arredondado */
+    font-weight: bold;
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+}
+
+/* Oculta a imagem de placeholder, pois usaremos o canvas para desenhar */
+.hangman-image {
+    display: none;
+}
+
+.category-selector {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin: 1rem 0;
+    flex-wrap: wrap;
+}
+
+.category-btn {
+    padding: 0.6rem 1.2rem;
+    border: 2px solid var(--primary-color);
+    border-radius: 6px;
+    background-color: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+.category-btn:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.category-btn.active {
+    background-color: var(--primary-color);
+    color: white;
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2rem;
+    }
+    .game-board {
+        flex-direction: column;
+        align-items: center;
+    }
+    .hangman-container, .word-display {
+        width: 100%;
+        max-width: 100%;
+    }
+    .key {
+        width: 38px;
+        height: 38px;
+        font-size: 0.9rem;
+    }
+    .letter {
+        width: 35px;
+        height: 45px;
+        font-size: 1.8rem;
+    }
+    button {
+        padding: 0.7rem 1.2rem;
+        font-size: 0.9rem;
+    }
+    .message-box {
+        padding: 1.5rem;
+    }
+    .message-title {
+        font-size: 2rem;
+    }
+    .message-text {
+        font-size: 1rem;
+    }
+    .word-reveal {
+        font-size: 1.4rem;
+    }
+}
